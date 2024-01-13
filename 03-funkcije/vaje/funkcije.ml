@@ -21,7 +21,7 @@ let reverse list =
  - : string list = []
 [*----------------------------------------------------------------------------*)
 
-let rec repeat = ()
+let rec repeat x n = if n <= 0 then [] else x :: (repeat x (n-1))
 
 (*----------------------------------------------------------------------------*]
  Funkcija [range] sprejme število in vrne seznam vseh celih števil od 0 do
