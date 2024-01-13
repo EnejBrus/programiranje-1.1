@@ -4,7 +4,12 @@
  Definirajte pomožno funkcijo za obračanje seznamov.
 [*----------------------------------------------------------------------------*)
 
-let rec reverse = ()
+let reverse list =
+  let rec reverse_aux acc = function
+    | [] -> acc
+    | x :: xs -> reverse_aux (x :: acc) xs
+  in reverse_aux [] list
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
