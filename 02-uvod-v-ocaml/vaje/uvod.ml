@@ -7,7 +7,12 @@
  # square 2;;
  - : int = 4
 [*----------------------------------------------------------------------------*)
+let dvakrat_na_nic f = f (f 0)
 
+let pobrisi x sez =
+  let je_razlicen_od_x y = x <> y in
+  List.filter je_razlicen_od_x sez 
+  
 let square = ()
 
 (*----------------------------------------------------------------------------*]

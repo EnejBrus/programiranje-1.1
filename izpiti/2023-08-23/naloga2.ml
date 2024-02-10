@@ -14,6 +14,18 @@ let primer =
       ] )
 
 (* 1. a) *)
+let rec prestej_zmage = function
+  | Winner White -> 1
+  | Winner Black -> 0
+  | Tie -> 0
+  | Decision (_, options) ->
+    let rec count_wins acc options =
+      match options with
+      | [] -> acc
+      | (_, subtree) :: rest -> count_wins (acc + prestej_zmage subtree) rest
+    in
+    count_wins 0 options
+
 
 (* 1. b) *)
 type result = { white_wins : float; black_wins : float; ties : float }

@@ -10,12 +10,31 @@ from functools import cache
 # Primer: v seznamu `[2, 3, 6, 8, 4, 4, 6, 7, 12, 8, 9]` kot rezultat vrne
 # podzaporedje `[2, 3, 4, 4, 6, 7, 8, 9]`.
 # -----------------------------------------------------------------------------
+def najdaljse_narascajoce_podzaporedje(sez):
+
+    @cache
+    def najdaljse(spodnja_meja, i):
+        # i označuje indeks trenutnega elementa
+        if i >= len(sez):
+            return []
+        elif sez[i] < spodnja_meja:
+            # Neprimeren element, preskočimo
+            return najdaljse(spodnja_meja, i + 1)
+        else:
+            # Razvejitev in agregacija glede na dolžino
+            z_prvim = [sez[i]] + najdaljse(sez[i], i + 1)
+            brez_prvega = najdaljse(spodnja_meja, i + 1)
+            if len(z_prvim) > len(brez_prvega):
+                return z_prvim
+            else:
+                return brez_prvega
+
+    return najdaljse(float("-inf"), 0)
 
 # -----------------------------------------------------------------------------
 # Rešitev sedaj popravite tako, da funkcija `vsa_najdaljsa` vrne seznam vseh
 # najdaljših naraščajočih podzaporedij.
 # -----------------------------------------------------------------------------
-
 
 
 # =============================================================================
@@ -42,7 +61,15 @@ from functools import cache
 # treh skokih, v močvari `[4, 1, 8, 2, 11, 1, 1, 1, 1, 1]` pa potrebuje zgolj
 # dva.
 # =============================================================================
-
+def zabica(mocvara):
+    @cache
+    def pobeg(k, e):
+        if k >= len(mocvara):
+            return 0
+        else:
+            e += mocvara[k]
+            return 1 + min([pobeg(k + d, e - d) for d in range(1, e + 1)])
+    return pobeg(0, 0)
 
 
 # =============================================================================
@@ -65,7 +92,22 @@ from functools import cache
 #     [1, 1, 0, 0, 1, 1, 0, 1, 1]
 #     [0, 1, 1, 0, 1, 1, 0, 1, 1]
 # =============================================================================
-
+@cache
+def nageljni(n, m, l):
+    if m <= 0:
+        return [[0 for _ in range(n)]]
+    elif n < l:
+        return []
+    elif n == l and m == 1:
+        return [[1 for _ in range(n)]]
+    else:
+        ne_postavimo = [[0] + postavitev for postavitev in nageljni(n-1, m, l)]
+        postavimo = \
+            [[1 for _ in range(l)] + [0] + postavitev
+             for postavitev in nageljni(n-l-1, m-1, l)]
+        return postavimo + ne_postavimo
+    
+    
 
 
 # =============================================================================
@@ -110,7 +152,24 @@ from functools import cache
 # zapil). Funkcija `pobeg` sprejme seznam, ki predstavlja finska mesta in vrne
 # seznam indeksov mest, v katerih se Mortimer ustavi.
 # =============================================================================
-
+def pobeg(pot):
+    @cache
+    def mesta(i, denar):
+        if i >= len(pot) and denar >= 0:
+            return [i]
+        elif i >= len(pot):
+            return None
+        else:
+            moznosti = []
+            for skok, stroski in pot[i]:
+                beg = mesta(skok, denar + stroski)
+                if beg is not None:
+                    moznosti.append(beg)
+            if len(moznosti) == 0:
+                return None
+            else:
+                return [i] + sorted(moznosti, key=len)[0]
+    return mesta(0, 0)
 
 
 # =============================================================================
